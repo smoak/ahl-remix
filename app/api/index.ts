@@ -53,17 +53,14 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
   const response = await fetch(url.toString());
   const { SiteKit } = (await response.json()) as ModulekitResponse;
   const games = SiteKit.Scorebar;
-  console.log(`got ${games.length} from server`, games);
+  console.log(`got ${games.length} from server`);
 
   if (date) {
     console.log("filtering games with date", date);
     const filteredGames = games.filter(
       (g) => differenceInCalendarDays(parseISO(g.GameDateISO8601), date) === 0
     );
-    console.log(
-      `filtered games down to ${filteredGames.length}`,
-      filteredGames
-    );
+    console.log(`filtered games down to ${filteredGames.length}`);
     return filteredGames;
   }
 
