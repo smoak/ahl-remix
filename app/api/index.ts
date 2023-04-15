@@ -48,7 +48,7 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
   const { daysAhead, daysBack } = calculateDaysByDate(date);
   url.searchParams.append("numberofdaysahead", daysAhead);
   url.searchParams.append("numberofdaysback", daysBack);
-  console.log("hitting url", url);
+  console.log("hitting url", url.toString());
 
   const response = await fetch(url.toString());
   const { SiteKit } = (await response.json()) as ModulekitResponse;
@@ -57,9 +57,14 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
 
   if (date) {
     console.log("filtering games with date", date);
-    const filteredGames = games.filter(
-      (g) => differenceInCalendarDays(parseISO(g.GameDateISO8601), date) === 0
-    );
+    const filteredGames = games
+      .map((g) => ({ startDate: parseISO(g.GameDateISO8601), ...g }))
+      .filter(
+        (g) =>
+          g.startDate.getDay() === date.getDay() &&
+          g.startDate.getFullYear() === date.getFullYear() &&
+          g.startDate.getMonth() === date.getMonth()
+      );
     console.log(`filtered games down to ${filteredGames.length}`);
     return filteredGames;
   }

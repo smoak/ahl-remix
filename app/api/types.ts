@@ -23,6 +23,7 @@ export type ScheduledGame = {
   readonly GameStatus: GameStatus;
   readonly GameClock: string;
   readonly Period: string;
+  readonly Intermission: string;
 };
 
 export type ModulekitResponse = {

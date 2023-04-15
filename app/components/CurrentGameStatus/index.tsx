@@ -9,7 +9,13 @@ export const CurrentGameStatus = ({
   game,
 }: CurrentGameStatusProps): JSX.Element => {
   if (game.GameStatus === "10" || game.GameStatus === "2") {
-    return <LiveGameStatus gameClock={game.GameClock} period={game.Period} />
+    return (
+      <LiveGameStatus
+        gameClock={game.GameClock}
+        period={game.Period}
+        isIntermission={game.Intermission === "1"}
+      />
+    );
   }
 
   if (game.GameStatus === "4") {

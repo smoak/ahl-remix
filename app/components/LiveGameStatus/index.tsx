@@ -2,6 +2,7 @@
 
 export type LiveGameStatusProps = {
   // readonly gameType: GameType;
+  readonly isIntermission: boolean;
   readonly period: string;
   readonly gameClock: string;
   // readonly currentPeriodTimeRemaining: string;
@@ -28,8 +29,22 @@ const LiveIndicator = () => (
   </span>
 );
 
-export const LiveGameStatus = ({ gameClock, period }: LiveGameStatusProps) => {
+export const LiveGameStatus = ({
+  gameClock,
+  isIntermission,
+  period,
+}: LiveGameStatusProps) => {
   const currentPeriod = parseInt(period);
+
+  if (isIntermission) {
+    return (
+      <>
+        {formatOrdinals(currentPeriod)} - END
+        <LiveIndicator />
+      </>
+    );
+  }
+
   return (
     <>
       {formatOrdinals(currentPeriod)} - {gameClock}
