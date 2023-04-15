@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "remix build",
+    "start": "run-s dev",
+    "dev": "run-p -n dev:*",
+    "dev:css": "run-s -n 'generate:css -- --watch'",
+    "dev:remix": "remix dev",
+    "generate:css": "tailwindcss -i ./styles/tailwind.css -o ./app/tailwind.css",
+    "lint": "eslint app --max-warnings=0",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remix-run/node": "^1.15.0",
+    "@remix-run/react": "^1.15.0",
+    "@remix-run/vercel": "^1.15.0",
+    "@vercel/node": "^2.6.2",
+    "cross-fetch": "^3.1.5",
+    "date-fns": "^2.29.3",
+    "date-fns-tz": "^2.0.0",
+    "isbot": "^3.6.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.15.0",
+    "@remix-run/eslint-config": "^1.15.0",
+    "@remix-run/serve": "^1.15.0",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "eslint": "^8.27.0",
+    "npm-run-all": "^4.1.5",
+    "tailwindcss": "^3.3.1",
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "volta": {
+    "node": "18.15.0"
+  }
+}
