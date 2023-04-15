@@ -1,4 +1,5 @@
 import type { ScheduledGame } from "~/api/types";
+import { LiveGameStatus } from "../LiveGameStatus";
 
 type CurrentGameStatusProps = {
   readonly game: ScheduledGame;
@@ -7,6 +8,10 @@ type CurrentGameStatusProps = {
 export const CurrentGameStatus = ({
   game,
 }: CurrentGameStatusProps): JSX.Element => {
+  if (game.GameStatus === "10" || game.GameStatus === "2") {
+    return <LiveGameStatus gameClock={game.GameClock} period={game.Period} />
+  }
+
   if (game.GameStatus === "4") {
     return (
       <>

@@ -15,13 +15,13 @@ const CLIENT_KEY = "ccb91f29d6744675";
 const calculateDaysByDate = (date?: Date) => {
   if (!date || isToday(date)) {
     return {
-      daysAhead: "1",
+      daysAhead: "2",
       daysBack: "0",
     };
   }
 
   const today = getToday();
-  const difference = Math.abs(differenceInCalendarDays(today, date)) + 1;
+  const difference = Math.abs(differenceInCalendarDays(today, date)) + 2;
 
   if (isBefore(date, today)) {
     return {

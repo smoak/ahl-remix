@@ -1,4 +1,4 @@
-export type GameStatus = "1" | "2" | "3" | "4";
+export type GameStatus = "1" | "2" | "3" | "4" | "10";
 
 export type ScheduledGame = {
   readonly ID: string;
@@ -21,6 +21,8 @@ export type ScheduledGame = {
   readonly GameStatusString: string;
   readonly GameStatusStringLong: string;
   readonly GameStatus: GameStatus;
+  readonly GameClock: string;
+  readonly Period: string;
 };
 
 export type ModulekitResponse = {

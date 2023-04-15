@@ -6,7 +6,7 @@ export type TeamScoreProps = {
 };
 
 export const TeamScore = ({ gameStatus, score }: TeamScoreProps) => {
-  if (gameStatus === "1" || gameStatus === "2") {
+  if (gameStatus === "1") {
     return null;
   }
 
