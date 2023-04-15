@@ -7,7 +7,6 @@ import type { ScheduledGame } from "~/api/types";
 import { DateSelector } from "~/components/DateSelector";
 import { GamesList } from "~/components/GamesList";
 import { Layout } from "~/components/Layout";
-import { getToday } from "~/date-fns";
 import { useDays } from "~/hooks/useDays";
 
 export const meta: V2_MetaFunction = () => {
@@ -15,7 +14,7 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const today = getToday();
+  const today = new Date();
   const scheduledGames = await getGamesByDate(today);
 
   return json(scheduledGames);
