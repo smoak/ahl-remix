@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 import { getGamesByDate } from "~/api";
-import { ScheduledGame } from "~/api/types";
+import type { ScheduledGame } from "~/api/types";
 import { GamesList } from "~/components/GamesList";
 import { Layout } from "~/components/Layout";
 import { getToday } from "~/date-fns";

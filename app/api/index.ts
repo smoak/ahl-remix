@@ -1,6 +1,5 @@
 import { fetch } from "cross-fetch";
 import type { ModulekitResponse, ScheduledGame } from "./types";
-import { compareAsc, parseISO } from "date-fns";
 
 export const BASE_URL = "https://lscluster.hockeytech.com/feed/index.php";
 const CLIENT_CODE = "ahl";
