@@ -1,12 +1,7 @@
 import { fetch } from "cross-fetch";
 import { getToday } from "~/date-fns";
 import type { ModulekitResponse, ScheduledGame } from "./types";
-import {
-  differenceInCalendarDays,
-  isBefore,
-  isToday,
-  parseISO,
-} from "date-fns";
+import { differenceInCalendarDays, isBefore, isToday, parse } from "date-fns";
 
 export const BASE_URL = "https://lscluster.hockeytech.com/feed/index.php";
 const CLIENT_CODE = "ahl";
@@ -58,7 +53,10 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
   if (date) {
     console.log("filtering games with date", date);
     const filteredGames = games
-      .map((g) => ({ startDate: parseISO(g.GameDateISO8601), ...g }))
+      .map((g) => ({
+        startDate: parse(g.Date, "yyyy-MM-dd", new Date()),
+        ...g,
+      }))
       .filter(
         (g) =>
           g.startDate.getDay() === date.getDay() &&
