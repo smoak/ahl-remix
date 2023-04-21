@@ -33,7 +33,6 @@ const calculateDaysByDate = (date?: Date) => {
 
 type GetGamesByDate = (date?: Date) => Promise<ScheduledGame[]>;
 export const getGamesByDate: GetGamesByDate = async (date) => {
-  console.log("Getting games by date", date);
   const url = new URL(BASE_URL);
   url.searchParams.append("feed", "modulekit");
   url.searchParams.append("key", CLIENT_KEY);
@@ -48,11 +47,9 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
   const response = await fetch(url.toString());
   const { SiteKit } = (await response.json()) as ModulekitResponse;
   const games = SiteKit.Scorebar;
-  console.log(`got ${games.length} from server`);
 
   if (date) {
-    console.log("filtering games with date", date);
-    const filteredGames = games
+    return games
       .map((g) => ({
         startDate: parse(g.Date, "yyyy-MM-dd", new Date()),
         ...g,
@@ -63,8 +60,6 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
           g.startDate.getFullYear() === date.getFullYear() &&
           g.startDate.getMonth() === date.getMonth()
       );
-    console.log(`filtered games down to ${filteredGames.length}`);
-    return filteredGames;
   }
 
   return games;
