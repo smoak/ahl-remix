@@ -1,31 +1,27 @@
 import { TeamLogo } from "~/components/TeamLogo";
+import type { Team } from "~/data/types";
 import { TeamName } from "../TeamName";
+import { TeamRecord } from "../TeamRecord";
 
 export type TeamInfoProps = {
-  readonly logoUrl: string;
-  readonly teamName: string;
-  readonly wins: string;
-  readonly losses: string;
-  readonly ot: string;
+  readonly team: Team;
+  readonly isPlayoffGame: boolean;
 };
 
-export const TeamInfo = ({
-  logoUrl,
-  losses,
-  ot,
-  teamName,
-  wins,
-}: TeamInfoProps) => (
+export const TeamInfo = ({ isPlayoffGame, team }: TeamInfoProps) => (
   <div className="flex w-1/3 flex-col items-center text-center">
-    <TeamLogo logoUrl={logoUrl} teamName={teamName} />
+    <TeamLogo logoUrl={team.logoUrl} teamName={team.nickName} />
     <TeamName
       isGameInProgress={false}
       isGoaliePulled={false}
       isOnPowerPlay={false}
-      name={teamName}
+      name={team.nickName}
     />
-    <p className="text-xs">
-      {wins}-{losses}-{ot}
-    </p>
+    <TeamRecord
+      isPlayoffGame={isPlayoffGame}
+      losses={team.losses}
+      ot={team.otLosses}
+      wins={team.wins}
+    />
   </div>
 );

@@ -1,11 +1,8 @@
-// import type { GameType } from "~/api/types";
-
 export type LiveGameStatusProps = {
-  // readonly gameType: GameType;
   readonly isIntermission: boolean;
-  readonly period: string;
+  readonly isPlayoffGame: boolean;
+  readonly period: number;
   readonly gameClock: string;
-  // readonly currentPeriodTimeRemaining: string;
 };
 
 // TODO: i18n
@@ -32,50 +29,51 @@ const LiveIndicator = () => (
 export const LiveGameStatus = ({
   gameClock,
   isIntermission,
+  isPlayoffGame,
   period,
-}: LiveGameStatusProps) => {
-  const currentPeriod = parseInt(period);
-
+}: LiveGameStatusProps): JSX.Element => {
   if (isIntermission) {
     return (
       <>
-        {formatOrdinals(currentPeriod)} - END
+        {formatOrdinals(period)} - END
         <LiveIndicator />
       </>
     );
   }
 
+  if (period < 4) {
+    return (
+      <>
+        {formatOrdinals(period)} - {gameClock}
+        <LiveIndicator />
+      </>
+    );
+  }
+
+  if (period === 4) {
+    return (
+      <>
+        OT - {gameClock}
+        <LiveIndicator />
+      </>
+    );
+  }
+
+  if (!isPlayoffGame) {
+    return (
+      <>
+        SO - {gameClock}
+        <LiveIndicator />
+      </>
+    );
+  }
+
+  const otPeriods = period - 3;
+
   return (
     <>
-      {formatOrdinals(currentPeriod)} - {gameClock}
+      {otPeriods}OT - {gameClock}
       <LiveIndicator />
     </>
   );
-
-  // if (currentPeriod === 4) {
-  //   return (
-  //     <>
-  //       OT - {currentPeriodTimeRemaining}
-  //       <LiveIndicator />
-  //     </>
-  //   );
-  // }
-
-  // if (gameType === "R") {
-  //   return (
-  //     <>
-  //       SO - {currentPeriodTimeRemaining}
-  //       <LiveIndicator />
-  //     </>
-  //   );
-  // }
-
-  // const otPeriods = currentPeriod - 3;
-
-  // return (
-  //   <>
-  //     {otPeriods}OT - {currentPeriodTimeRemaining}
-  //     <LiveIndicator />
-  //   </>
-  // );
 };

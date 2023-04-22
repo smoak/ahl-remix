@@ -1,12 +1,12 @@
-import type { GameStatus } from "~/api/types";
+import type { GameStatus } from "~/data/types";
 
 export type TeamScoreProps = {
-  readonly score: string;
+  readonly score: number;
   readonly gameStatus: GameStatus;
 };
 
 export const TeamScore = ({ gameStatus, score }: TeamScoreProps) => {
-  if (gameStatus === "1") {
+  if (gameStatus === "Scheduled") {
     return null;
   }
 

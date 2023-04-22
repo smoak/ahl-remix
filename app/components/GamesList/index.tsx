@@ -1,8 +1,8 @@
-import type { ScheduledGame } from "~/api/types";
+import type { Game } from "~/data/types";
 import { GameCard } from "../GameCard";
 
 export type GamesListProps = {
-  readonly games: ScheduledGame[];
+  readonly games: Game[];
 };
 
 type GamesListFunction = (props: GamesListProps) => JSX.Element;
@@ -20,7 +20,7 @@ export const GamesList: GamesListFunction = ({ games }) => {
   return (
     <div className="grid grid-cols-auto-fill gap-5">
       {games.map((game) => {
-        return <GameCard key={game.ID} game={game} />;
+        return <GameCard key={game.id} game={game} />;
       })}
     </div>
   );

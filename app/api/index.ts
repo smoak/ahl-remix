@@ -1,7 +1,14 @@
 import { fetch } from "cross-fetch";
 import { getToday } from "~/date-fns";
-import type { ModulekitResponse, ScheduledGame } from "./types";
-import { differenceInCalendarDays, isBefore, isToday, parse } from "date-fns";
+import type { BootstrapResponse, ModulekitResponse } from "./types";
+import {
+  differenceInCalendarDays,
+  isBefore,
+  isSameDay,
+  isToday,
+} from "date-fns";
+import type { Game } from "~/data/types";
+import { normalizeScheduledGames } from "~/data/normalization";
 
 export const BASE_URL = "https://lscluster.hockeytech.com/feed/index.php";
 const CLIENT_CODE = "ahl";
@@ -31,7 +38,23 @@ const calculateDaysByDate = (date?: Date) => {
   };
 };
 
-type GetGamesByDate = (date?: Date) => Promise<ScheduledGame[]>;
+const getBootstrap = async (): Promise<BootstrapResponse> => {
+  const url = new URL(BASE_URL);
+  url.searchParams.append("feed", "statviewfeed");
+  url.searchParams.append("view", "bootstrap");
+  url.searchParams.append("season", "latest");
+  url.searchParams.append("key", CLIENT_KEY);
+  url.searchParams.append("client_code", CLIENT_CODE);
+  console.log("hitting url", url.toString());
+
+  const response = await fetch(url.toString());
+  const responseText = await response.text();
+  return JSON.parse(
+    responseText.substring(1, responseText.length - 1)
+  ) as BootstrapResponse;
+};
+
+type GetGamesByDate = (date?: Date) => Promise<Game[]>;
 export const getGamesByDate: GetGamesByDate = async (date) => {
   const url = new URL(BASE_URL);
   url.searchParams.append("feed", "modulekit");
@@ -44,22 +67,14 @@ export const getGamesByDate: GetGamesByDate = async (date) => {
   url.searchParams.append("numberofdaysback", daysBack);
   console.log("hitting url", url.toString());
 
+  const bootstrap = await getBootstrap();
+
   const response = await fetch(url.toString());
   const { SiteKit } = (await response.json()) as ModulekitResponse;
-  const games = SiteKit.Scorebar;
+  const games = normalizeScheduledGames(SiteKit.Scorebar, bootstrap);
 
   if (date) {
-    return games
-      .map((g) => ({
-        startDate: parse(g.Date, "yyyy-MM-dd", new Date()),
-        ...g,
-      }))
-      .filter(
-        (g) =>
-          g.startDate.getDay() === date.getDay() &&
-          g.startDate.getFullYear() === date.getFullYear() &&
-          g.startDate.getMonth() === date.getMonth()
-      );
+    return games.filter((g) => isSameDay(date, new Date(g.startTime)));
   }
 
   return games;

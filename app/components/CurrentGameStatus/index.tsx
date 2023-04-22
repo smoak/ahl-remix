@@ -1,45 +1,43 @@
-import type { ScheduledGame } from "~/api/types";
+import type { GameStatus } from "~/data/types";
+import { FinalGameStatus } from "../FinalGameStatus";
 import { LiveGameStatus } from "../LiveGameStatus";
 
 type CurrentGameStatusProps = {
-  readonly game: ScheduledGame;
+  readonly gameStatus: GameStatus;
+  readonly startTime: number;
+  readonly period: number;
+  readonly isIntermission: boolean;
+  readonly isPlayoffGame: boolean;
+  readonly gameClock: string;
 };
 
 export const CurrentGameStatus = ({
-  game,
+  gameClock,
+  gameStatus,
+  isIntermission,
+  isPlayoffGame,
+  startTime,
+  period,
 }: CurrentGameStatusProps): JSX.Element => {
-  if (game.GameStatus === "10" || game.GameStatus === "2") {
+  if (gameStatus === "Live") {
     return (
       <LiveGameStatus
-        gameClock={game.GameClock}
-        period={game.Period}
-        isIntermission={game.Intermission === "1"}
+        gameClock={gameClock}
+        period={period}
+        isIntermission={isIntermission}
+        isPlayoffGame={isPlayoffGame}
       />
     );
   }
 
-  if (game.GameStatus === "4") {
-    return (
-      <>
-        <span className="mx-auto block">{game.GameStatusStringLong}</span>
-        <span className="mx-auto block pt-6"></span>
-      </>
-    );
-  }
-
-  if (game.GameStatus === "3") {
-    return (
-      <>
-        <span className="mx-auto block">Final</span>
-        <span className="mx-auto block pt-6"></span>
-      </>
-    );
+  if (gameStatus === "Final") {
+    return <FinalGameStatus endedInPeriod={period} />;
   }
 
   return (
     <>
       {new Intl.DateTimeFormat("en-US", { timeStyle: "short" }).format(
-        new Date(game.GameDateISO8601)
+        new Date(startTime)
       )}
     </>
   );
