@@ -1,5 +1,8 @@
 import type { BootstrapResponse, ScheduledGame } from "~/api/types";
 import type { Game, GameStatus, Team } from "./types";
+import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
+
+const EST_IANA_ZONE_ID = "America/New_York";
 
 export const normalizeScheduledGames = (
   games: ScheduledGame[],
@@ -44,10 +47,17 @@ export const normalizeScheduledGame: NormalizeScheduledGame = (
     wins: parseInt(game.VisitorWins),
   };
 
+  const startTime = utcToZonedTime(
+    new Date(game.GameDateISO8601),
+    game.Timezone
+  );
+  const startTimeUtc = zonedTimeToUtc(startTime, game.Timezone);
+
   return {
     clockTime: game.GameClock,
     id: parseInt(game.ID),
-    startTime: new Date(game.GameDateISO8601).getTime(),
+    startTime: startTime.getTime(),
+    startTimeUtc: startTimeUtc.getTime(),
     homeGoals: parseInt(game.HomeGoals),
     homeTeam,
     period: parseInt(game.Period),

@@ -1,8 +1,9 @@
 import { getHours, startOfDay, subDays } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 
+const EST_IANA_ZONE_ID = "America/New_York";
 export const DATE_LINK_FORMAT = "yyyy-MM-dd";
 export const DATE_DISPLAY_FORMAT = "dd MMMM yyyy";
-const EST_TZ_OFFSET = -300;
 
 const getTimeZonedDay = (date: Date): Date => {
   const hours = getHours(date);
@@ -15,9 +16,8 @@ const getTimeZonedDay = (date: Date): Date => {
 };
 
 export const getToday = () => {
-  const now = new Date();
-  now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000);
-  const etNow = new Date(now.getTime() + EST_TZ_OFFSET * 60 * 1000);
+  const now = new Date().toISOString();
+  const etNow = utcToZonedTime(now, EST_IANA_ZONE_ID);
 
   return getTimeZonedDay(etNow);
 };

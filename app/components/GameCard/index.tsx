@@ -19,7 +19,7 @@ export const GameCard = ({ game }: GameCardProps): JSX.Element => {
             <p className="flex-1 whitespace-nowrap px-3 pt-1.5 text-center uppercase">
               <CurrentGameStatus
                 gameStatus={game.status}
-                startTime={game.startTime}
+                startTime={game.startTimeUtc}
                 period={game.period}
                 isIntermission={game.isInIntermission}
                 gameClock={game.clockTime}

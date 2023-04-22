@@ -1,6 +1,7 @@
 export type Game = {
   readonly id: number;
   readonly startTime: number;
+  readonly startTimeUtc: number;
   readonly homeTeam: Team;
   readonly homeGoals: number;
   readonly visitorTeam: Team;
