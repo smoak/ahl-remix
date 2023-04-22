@@ -2,8 +2,6 @@ import type { BootstrapResponse, ScheduledGame } from "~/api/types";
 import type { Game, GameStatus, Team } from "./types";
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 
-const EST_IANA_ZONE_ID = "America/New_York";
-
 export const normalizeScheduledGames = (
   games: ScheduledGame[],
   bootstrap: BootstrapResponse
