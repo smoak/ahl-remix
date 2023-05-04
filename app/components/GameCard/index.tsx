@@ -25,11 +25,6 @@ export const GameCard = ({ game }: GameCardProps): JSX.Element => {
                 gameClock={game.clockTime}
                 isPlayoffGame={game.isPlayoffGame}
               />
-              <PlayoffSeriesSummary
-                homeTeam={game.homeTeam}
-                isPlayoffGame={game.isPlayoffGame}
-                visitorTeam={game.visitorTeam}
-              />
             </p>
             <TeamScore score={game.visitorGoals} gameStatus={game.status} />
           </div>
