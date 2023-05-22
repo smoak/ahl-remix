@@ -1,4 +1,10 @@
+import { child, query, ref } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
+import { firebaseDatabase } from "~/data/firebase";
+import type { RunningClock } from "~/data/types";
+
 export type LiveGameStatusProps = {
+  readonly gameId: number;
   readonly isIntermission: boolean;
   readonly isPlayoffGame: boolean;
   readonly period: number;
@@ -27,11 +33,26 @@ const LiveIndicator = () => (
 );
 
 export const LiveGameStatus = ({
+  gameId,
   gameClock,
   isIntermission,
   isPlayoffGame,
   period,
 }: LiveGameStatusProps): JSX.Element => {
+  const [snapshot] = useObjectVal<RunningClock>(
+    query(child(ref(firebaseDatabase), "/svf/ahl/runningclock/games/" + gameId))
+  );
+
+  if (snapshot && snapshot.status_id === 2) {
+    return (
+      <>
+        {formatOrdinals(parseInt(snapshot.Clock.period))} -{" "}
+        {snapshot.Clock.Minutes}:{snapshot.Clock.Seconds}
+        <LiveIndicator />
+      </>
+    );
+  }
+
   if (isIntermission) {
     return (
       <>

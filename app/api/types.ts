@@ -1,4 +1,5 @@
 export type ScheduledGame = {
+  readonly game_number: string;
   readonly ID: string;
   readonly SeasonID: string;
   readonly Date: string;

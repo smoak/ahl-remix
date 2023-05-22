@@ -11,6 +11,7 @@ export type Game = {
   readonly clockTime: string;
   readonly isPlayoffGame: boolean;
   readonly isInIntermission: boolean;
+  readonly gameNumber: number;
 };
 
 export type Team = {
@@ -78,3 +79,14 @@ export type GameDetails = {
 };
 
 export const isLiveGame = (game: Game): boolean => game.status === "Live";
+
+export type RunningClock = {
+  readonly Clock: {
+    readonly Minutes: string;
+    readonly Seconds: string;
+    readonly Running: boolean;
+    readonly period: string;
+  };
+  readonly DatePlayed: string;
+  readonly status_id: number;
+};

@@ -3,6 +3,7 @@ import { FinalGameStatus } from "../FinalGameStatus";
 import { LiveGameStatus } from "../LiveGameStatus";
 
 type CurrentGameStatusProps = {
+  readonly gameId: number;
   readonly gameStatus: GameStatus;
   readonly startTime: number;
   readonly period: number;
@@ -12,6 +13,7 @@ type CurrentGameStatusProps = {
 };
 
 export const CurrentGameStatus = ({
+  gameId,
   gameClock,
   gameStatus,
   isIntermission,
@@ -22,6 +24,7 @@ export const CurrentGameStatus = ({
   if (gameStatus === "Live") {
     return (
       <LiveGameStatus
+        gameId={gameId}
         gameClock={gameClock}
         period={period}
         isIntermission={isIntermission}

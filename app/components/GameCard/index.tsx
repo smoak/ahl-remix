@@ -10,14 +10,15 @@ export type GameCardProps = {
 
 export const GameCard = ({ game }: GameCardProps): JSX.Element => {
   return (
-    <article className="flex rounded-lg border border-black">
+    <article className="flex h-36 rounded-lg border border-black">
       <div className="flex w-full flex-col">
-        <div className="flex p-9">
+        <div className="flex p-8">
           <TeamInfo team={game.homeTeam} isPlayoffGame={game.isPlayoffGame} />
           <div className="mt-3 flex flex-1">
             <TeamScore score={game.homeGoals} gameStatus={game.status} />
             <p className="flex-1 whitespace-nowrap px-3 pt-1.5 text-center uppercase">
               <CurrentGameStatus
+                gameId={game.id}
                 gameStatus={game.status}
                 startTime={game.startTimeUtc}
                 period={game.period}
