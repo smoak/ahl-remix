@@ -1,5 +1,6 @@
 import type { ScoringDetail, Team } from "~/data/types";
 import { ScoringDetailList } from "../ScoringDetailList";
+import { useGoalSummary } from "~/hooks/useGoalSummary";
 
 type PeriodScoringSummaryProps = {
   readonly ordinal: string;
@@ -27,13 +28,67 @@ const PeriodScoringSummary = ({
   );
 };
 
+type OvertimePeriodScoringSummaryProps = Omit<
+  PeriodScoringSummaryProps,
+  "ordinal" | "scoringDetails"
+> & {
+  readonly scoringDetail?: ScoringDetail;
+};
+
+const OvertimePeriodScoringSummary = ({
+  homeTeam,
+  visitorTeam,
+  scoringDetail,
+}: OvertimePeriodScoringSummaryProps): JSX.Element | null => {
+  if (!scoringDetail) {
+    return null;
+  }
+
+  const { period, periodOrdinal } = scoringDetail;
+
+  return (
+    <>
+      {[...Array(period - 4).keys()].map((i) => {
+        if (i === 0) {
+          return (
+            <PeriodScoringSummary
+              key={i}
+              visitorTeam={visitorTeam}
+              homeTeam={homeTeam}
+              ordinal="OT"
+              scoringDetails={[]}
+            />
+          );
+        }
+        return (
+          <PeriodScoringSummary
+            key={i}
+            visitorTeam={visitorTeam}
+            homeTeam={homeTeam}
+            ordinal={`${i + 1}OT`}
+            scoringDetails={[]}
+          />
+        );
+      })}
+      <PeriodScoringSummary
+        visitorTeam={visitorTeam}
+        homeTeam={homeTeam}
+        ordinal={periodOrdinal}
+        scoringDetails={[scoringDetail]}
+      />
+    </>
+  );
+};
+
 type ScoringSummaryProps = {
+  readonly gameId: number;
   readonly homeTeam: Team;
   readonly scoringDetails: ScoringDetail[];
   readonly visitorTeam: Team;
 };
 
 export const ScoringSummary = ({
+  gameId,
   homeTeam,
   visitorTeam,
   scoringDetails,
@@ -51,9 +106,9 @@ export const ScoringSummary = ({
   const thirdPeriodScoringPlays = scoringDetails.filter(
     (sp) => sp.period === 3
   );
-  // const otPeriodScoringPlays = scoringDetails.filter(
-  //   (sp) => ![1, 2, 3].includes(sp.period) && sp.periodOrdinalNum !== "SO"
-  // );
+  const otPeriodScoringPlays = scoringDetails.filter(
+    (sp) => ![1, 2, 3].includes(sp.period) && sp.periodOrdinal !== "SO"
+  );
 
   return (
     <div>
@@ -73,6 +128,11 @@ export const ScoringSummary = ({
       <PeriodScoringSummary
         ordinal="3rd"
         scoringDetails={thirdPeriodScoringPlays}
+        homeTeam={homeTeam}
+        visitorTeam={visitorTeam}
+      />
+      <OvertimePeriodScoringSummary
+        scoringDetail={otPeriodScoringPlays[0]}
         homeTeam={homeTeam}
         visitorTeam={visitorTeam}
       />

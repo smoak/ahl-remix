@@ -1,10 +1,7 @@
 import type { GameDetails, Team } from "~/data/types";
+import { useGoalSummary } from "~/hooks/useGoalSummary";
 import { TeamLogo } from "../TeamLogo";
 import { TableCell } from "../Table";
-
-type LiveGameSummaryTableProps = {
-  readonly gameDetails: GameDetails;
-};
 
 type TeamNameTableCellProps = {
   readonly team: Team;
@@ -29,13 +26,42 @@ const TeamNameTableCell = ({ shotsOnGoal, team }: TeamNameTableCellProps) => {
   );
 };
 
+type GoalCellsProps = {
+  readonly goalsByPeriod: number[];
+};
+const GoalCells = ({ goalsByPeriod }: GoalCellsProps): JSX.Element => {
+  const firstPeriod = goalsByPeriod[1];
+  const secondPeriod = goalsByPeriod[2];
+  const thirdPeriod = goalsByPeriod[3];
+
+  return (
+    <>
+      <TableCell>{firstPeriod}</TableCell>
+      <TableCell>{secondPeriod ?? "-"}</TableCell>
+      <TableCell>{thirdPeriod ?? "-"}</TableCell>
+    </>
+  );
+};
+
+type LiveGameSummaryTableProps = {
+  readonly gameDetails: GameDetails;
+};
+
 export const LiveGameSummaryTable = ({
   gameDetails,
 }: LiveGameSummaryTableProps) => {
+  const goalsSummary = useGoalSummary(gameDetails.game.id);
   const { periods, game, teamStats } = gameDetails;
-  const firstPeriod = periods[0];
-  const secondPeriod = periods[1];
-  const thirdPeriod = periods[2];
+  const homeGoalTotal = goalsSummary?.HomeGoalTotal ?? game.homeGoals;
+  const visitorGoalTotal = goalsSummary?.VisitorGoalTotal ?? game.visitorGoals;
+  const homeGoalsByPeriod = goalsSummary?.HomeGoalsByPeriod ?? [
+    0,
+    ...periods.map((p) => p.homeGoals),
+  ];
+  const visitorGoalsByPeriod = goalsSummary?.VisitorGoalsByPeriod ?? [
+    0,
+    ...periods.map((p) => p.visitorGoals),
+  ];
 
   return (
     <table className="my-5 min-w-full border border-black text-center text-ahl-gray-50 md:min-w-min">
@@ -54,20 +80,16 @@ export const LiveGameSummaryTable = ({
             team={game.visitorTeam}
             shotsOnGoal={teamStats.visitor.shotsOnGoal}
           />
-          <TableCell>{firstPeriod.visitorGoals}</TableCell>
-          <TableCell>{secondPeriod?.visitorGoals ?? "-"}</TableCell>
-          <TableCell>{thirdPeriod?.visitorGoals ?? "-"}</TableCell>
-          <TableCell>{game.visitorGoals}</TableCell>
+          <GoalCells goalsByPeriod={visitorGoalsByPeriod} />
+          <TableCell>{visitorGoalTotal}</TableCell>
         </tr>
         <tr className="text-black">
           <TeamNameTableCell
             team={game.homeTeam}
             shotsOnGoal={teamStats.home.shotsOnGoal}
           />
-          <TableCell>{firstPeriod.homeGoals}</TableCell>
-          <TableCell>{secondPeriod?.homeGoals ?? "-"}</TableCell>
-          <TableCell>{thirdPeriod?.homeGoals ?? "-"}</TableCell>
-          <TableCell>{game.homeGoals}</TableCell>
+          <GoalCells goalsByPeriod={homeGoalsByPeriod} />
+          <TableCell>{homeGoalTotal}</TableCell>
         </tr>
       </tbody>
     </table>

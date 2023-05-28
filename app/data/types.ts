@@ -80,7 +80,7 @@ export type GameDetails = {
 
 export const isLiveGame = (game: Game): boolean => game.status === "Live";
 
-export type RunningClock = {
+export type FirebaseRunningClockSnapshot = {
   readonly Clock: {
     readonly Minutes: string;
     readonly Seconds: string;
@@ -89,4 +89,29 @@ export type RunningClock = {
   };
   readonly DatePlayed: string;
   readonly status_id: number;
+};
+
+export type FirebaseGoalsSummarySnapshot = {
+  readonly DatePlayed: string;
+  readonly HomeAssistPoints: number;
+  readonly HomeGoalTotal: number;
+  readonly HomeGoalsByPeriod: number[];
+  readonly PeriodsInfo: unknown[];
+  readonly Shootout: boolean;
+  readonly VisitorGoalTotal: number;
+  readonly VisitorGoalsByPeriod: number[];
+};
+
+export type FirebasePublishedClockSnapshot = {
+  readonly ClockMinutes: number;
+  readonly ClockSeconds: number;
+  readonly DatePlayed: string;
+  readonly Final: boolean;
+  readonly PeriodId: number;
+  readonly PeriodLongName: string;
+  readonly PeriodShortName: string;
+  readonly ProgressString: string;
+  readonly Started: boolean;
+  readonly StatusId: number;
+  readonly StatusName: string;
 };

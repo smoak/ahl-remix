@@ -33,6 +33,7 @@ export const Index = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <GameSummary gameDetails={gameDetails} />
         <ScoringSummary
+          gameId={gameDetails.game.id}
           scoringDetails={gameDetails.scoringDetails}
           visitorTeam={gameDetails.game.visitorTeam}
           homeTeam={gameDetails.game.homeTeam}

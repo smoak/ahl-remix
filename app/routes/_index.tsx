@@ -9,7 +9,6 @@ import { Layout } from "~/components/Layout";
 import type { Game } from "~/data/types";
 import { getToday } from "~/date-fns";
 import { useDays } from "~/hooks/useDays";
-import { useGames } from "~/hooks/useGames";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: "AHL Remix" }];
@@ -23,9 +22,8 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function Index() {
-  const loadedGames = useLoaderData<Game[]>();
+  const games = useLoaderData<Game[]>();
   const { prevDay, day, nextDay } = useDays();
-  const games = useGames({ route: "?index", preloadedGames: loadedGames });
 
   return (
     <Layout>

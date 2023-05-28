@@ -64,6 +64,6 @@ export const normalizeScheduledGame: NormalizeScheduledGame = (
     visitorTeam,
     isInIntermission: game.Intermission === "1",
     isPlayoffGame: bootstrap.playoffSeasons.some((s) => s.id === game.SeasonID),
-    gameNumber: parseInt(game.game_number)
+    gameNumber: parseInt(game.game_number),
   };
 };
