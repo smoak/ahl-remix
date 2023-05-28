@@ -10,7 +10,7 @@ export type TeamInfoProps = {
 
 export const TeamInfo = ({ isPlayoffGame, team }: TeamInfoProps) => (
   <div className="flex w-1/3 flex-col items-center text-center">
-    <TeamLogo logoUrl={team.logoUrl} teamName={team.nickName} />
+    <TeamLogo id={team.id} logoUrl={team.logoUrl} teamName={team.nickName} />
     <TeamName
       isGameInProgress={false}
       isGoaliePulled={false}

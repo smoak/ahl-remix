@@ -1,9 +1,14 @@
 export type TeamLogoProps = {
+  readonly id: number;
   readonly logoUrl: string;
   readonly teamName: string;
 };
 
-export const TeamLogo = ({ logoUrl, teamName }: TeamLogoProps): JSX.Element => {
+export const TeamLogo = ({
+  id,
+  logoUrl,
+  teamName,
+}: TeamLogoProps): JSX.Element => {
   return (
     <img
       src={logoUrl}

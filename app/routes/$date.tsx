@@ -6,9 +6,9 @@ import { DateSelector } from "~/components/DateSelector";
 import { GamesList } from "~/components/GamesList";
 import { Layout } from "~/components/Layout";
 import { useDays } from "~/hooks/useDays";
-import type { ScheduledGame } from "~/api/types";
 import { DATE_LINK_FORMAT } from "~/date-fns";
 import { parse } from "date-fns";
+import type { Game } from "~/data/types";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { date } = params;
@@ -17,13 +17,13 @@ export const loader: LoaderFunction = async ({ params }) => {
     date ? parse(date, DATE_LINK_FORMAT, new Date()) : undefined
   );
 
-  return json<ScheduledGame[]>(games);
+  return json<Game[]>(games);
 };
 
 export const Index = () => {
   const { date } = useParams();
   const { prevDay, day, nextDay } = useDays(date);
-  const games = useLoaderData<ScheduledGame[]>();
+  const games = useLoaderData<Game[]>();
 
   return (
     <Layout>

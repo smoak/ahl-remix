@@ -1,5 +1,6 @@
 import type { Game } from "~/data/types";
 import { GameCard } from "../GameCard";
+import { Link } from "@remix-run/react";
 
 export type GamesListProps = {
   readonly games: Game[];
@@ -20,7 +21,11 @@ export const GamesList: GamesListFunction = ({ games }) => {
   return (
     <div className="grid grid-cols-auto-fill gap-5">
       {games.map((game) => {
-        return <GameCard key={game.id} game={game} />;
+        return (
+          <Link prefetch="intent" to={`/game/${game.id}`} key={game.id}>
+            <GameCard key={game.id} game={game} />
+          </Link>
+        );
       })}
     </div>
   );
