@@ -1,6 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import type { Game} from "~/data/types";
+import type { Game } from "~/data/types";
 import { isLiveGame } from "~/data/types";
 import { useRevalidateOnInterval } from "./useRevalidateOnInterval";
 import { useRevalidateOnVisible } from "./useRevalidateOnVisible";

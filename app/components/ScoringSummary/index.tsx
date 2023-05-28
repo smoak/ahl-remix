@@ -15,7 +15,7 @@ const PeriodScoringSummary = ({
 }: PeriodScoringSummaryProps): JSX.Element => {
   return (
     <>
-      <div className="my-5 border-b-2 border-nhl-black bg-black px-6 py-3 font-bold text-white">
+      <div className="border-nhl-black my-5 border-b-2 bg-black px-6 py-3 font-bold text-white">
         {ordinal} period
       </div>
       <ScoringDetailList

@@ -56,7 +56,8 @@ export const ScoringPlay = ({
   homeTeam,
   scoringDetail,
 }: ScoringPlayProps): JSX.Element => {
-  const { periodTime, periodOrdinal, scoringTeamId, goals, strength } = scoringDetail;
+  const { periodTime, periodOrdinal, scoringTeamId, goals, strength } =
+    scoringDetail;
   const isScoringTeamVisitor = scoringTeamId === visitorTeam.id;
   const color = isScoringTeamVisitor ? red["700"] : slate["700"];
 

@@ -12,7 +12,7 @@ export const TeamRecord = ({
   wins,
 }: TeamRecordProps) => {
   if (isPlayoffGame) {
-    return null; 
+    return null;
   }
 
   return (

@@ -10,7 +10,10 @@
     "dev:css": "run-s -n 'generate:css -- --watch'",
     "dev:remix": "remix dev",
     "generate:css": "tailwindcss -i ./styles/tailwind.css -o ./app/tailwind.css",
-    "lint": "eslint app --max-warnings=0",
+    "lint": "run-s 'lint:*'",
+    "lint:es": "eslint app --max-warnings=0",
+    "lint:style": "prettier 'app/**/*.(ts|tsx)' --check",
+    "lint:style:fix": "prettier 'app/**/*.(ts|tsx)' --write",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -32,7 +35,11 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.3.0",
     "tailwindcss": "^3.3.1",
     "typescript": "^4.8.4"
   },

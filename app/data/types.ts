@@ -63,12 +63,12 @@ export type GameStatus = "Scheduled" | "Live" | "Final";
 
 export type TeamStat = {
   readonly shotsOnGoal: number;
-}
+};
 
 export type TeamStats = {
   readonly home: TeamStat;
   readonly visitor: TeamStat;
-}
+};
 
 export type GameDetails = {
   readonly game: Game;
