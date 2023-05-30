@@ -40,6 +40,46 @@ export type ModulekitResponse = {
   };
 };
 
+type HeadToHeadRecord = {
+  readonly wins: number;
+  readonly losses: number;
+  readonly ties: number;
+  readonly OTWins: number;
+  readonly OTLosses: number;
+  readonly SOLosses: number;
+  readonly formattedRecord: string;
+};
+
+type HeadToHeadTeamRecords = {
+  readonly currentYear: HeadToHeadRecord;
+  readonly previousFiveYears: HeadToHeadRecord;
+  readonly previousYear: HeadToHeadRecord;
+};
+
+export type GameCenterPreviewPreviousMeeting = {
+  readonly gameId: string;
+  readonly datePlayed: string;
+  readonly game_date_iso_8601: string;
+  readonly homeCity: string;
+  readonly homeScore: string;
+  readonly homeTeamId: string;
+  readonly status: string;
+  readonly visitingCity: string;
+  readonly visitingScore: string;
+  readonly visitingTeamId: string;
+};
+
+export type GameCenterPreviewResponse = {
+  readonly headToHeadRecords: {
+    readonly homeTeam: HeadToHeadTeamRecords;
+    readonly visitingTeam: HeadToHeadTeamRecords;
+  };
+  readonly homeTeam: {};
+  readonly lineupPairingReport: unknown | null;
+  readonly previousMeetings: GameCenterPreviewPreviousMeeting[];
+  readonly visitingTeam: {};
+};
+
 export type BootstrapResponse = {
   readonly firebaseUrl: string;
   readonly firebaseToken: string;

@@ -11,6 +11,21 @@ export type Game = {
   readonly clockTime: string;
   readonly isPlayoffGame: boolean;
   readonly isInIntermission: boolean;
+  readonly playoffSeriesSummary?: string;
+};
+
+export type PreviousMeeting = {
+  readonly gameId: number;
+  readonly homeScore: number;
+  readonly homeTeamId: number;
+  readonly visitingScore: number;
+  readonly visitingTeamId: number;
+  readonly winningTeamId: number;
+};
+
+export type GamePreview = {
+  readonly gameId: number;
+  readonly previousMeetings: PreviousMeeting[];
 };
 
 export type Team = {

@@ -11,11 +11,13 @@ import type {
   Game,
   GameDetails,
   GamePeriod,
+  GamePreview,
   GameStatus,
   ScoringDetail,
   ScoringDetailAssister,
   Team,
 } from "../types";
+import { getPlayoffSeriesSummary } from "./playoffSeriesSummary";
 
 const normalizeGameSummaryTeam = (
   { info, seasonStats }: GameSummaryTeam,
@@ -163,10 +165,16 @@ const formatClockTime = (gameStatus: string): string => {
   return gameStatus.substring(13, 18);
 };
 
-export const normalizeGameSummaryResponse = (
-  gameSummaryResponse: GameSummaryResponse,
-  bootstrap: BootstrapResponse
-): GameDetails => {
+type NormalizeGameSummaryResponseOptions = {
+  readonly gameSummaryResponse: GameSummaryResponse;
+  readonly bootstrap: BootstrapResponse;
+  readonly gamePreview?: GamePreview;
+};
+export const normalizeGameSummaryResponse = ({
+  bootstrap,
+  gameSummaryResponse,
+  gamePreview,
+}: NormalizeGameSummaryResponseOptions): GameDetails => {
   const { details, homeTeam, periods, visitingTeam } = gameSummaryResponse;
 
   const isPlayoffGame = bootstrap.playoffSeasons.some(
@@ -175,13 +183,21 @@ export const normalizeGameSummaryResponse = (
   const startTime = new Date(details.GameDateISO8601);
   const period = parseInt(periods[periods.length - 1].info.id);
   const clockTime = formatClockTime(details.status);
+  const normalizedHomeTeam = normalizeGameSummaryTeam(
+    homeTeam,
+    details.seasonId
+  );
+  const normalizedVisitorTeam = normalizeGameSummaryTeam(
+    visitingTeam,
+    details.seasonId
+  );
 
   const game: Game = {
     clockTime,
     homeGoals: homeTeam.stats.goals,
-    homeTeam: normalizeGameSummaryTeam(homeTeam, details.seasonId),
+    homeTeam: normalizedHomeTeam,
     id: details.id,
-    visitorTeam: normalizeGameSummaryTeam(visitingTeam, details.seasonId),
+    visitorTeam: normalizedVisitorTeam,
     isInIntermission: details.status.includes("Intermission"),
     isPlayoffGame,
     period,
@@ -189,6 +205,11 @@ export const normalizeGameSummaryResponse = (
     startTimeUtc: startTime.getTime(),
     status: getGameStatus(details),
     visitorGoals: visitingTeam.stats.goals,
+    playoffSeriesSummary: getPlayoffSeriesSummary({
+      homeTeam: normalizedHomeTeam,
+      gamePreview,
+      visitorTeam: normalizedVisitorTeam,
+    }),
   };
 
   // periods is an array of objects for each period

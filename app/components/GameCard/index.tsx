@@ -1,6 +1,6 @@
 import type { Game } from "~/data/types";
 import { CurrentGameStatus } from "../CurrentGameStatus";
-// import { PlayoffSeriesSummary } from "../PlayoffSeriesSummary";
+import { PlayoffSeriesSummary } from "../PlayoffSeriesSummary";
 import { TeamInfo } from "../TeamInfo";
 import { TeamScore } from "../TeamScore";
 
@@ -25,6 +25,7 @@ export const GameCard = ({ game }: GameCardProps): JSX.Element => {
                 gameClock={game.clockTime}
                 isPlayoffGame={game.isPlayoffGame}
               />
+              <PlayoffSeriesSummary seriesSummary={game.playoffSeriesSummary} />
             </p>
             <TeamScore score={game.visitorGoals} gameStatus={game.status} />
           </div>

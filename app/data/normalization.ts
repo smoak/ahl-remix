@@ -1,11 +1,22 @@
 import type { BootstrapResponse, ScheduledGame } from "~/api/types";
-import type { Game, GameStatus, Team } from "./types";
+import type { Game, GamePreview, GameStatus, Team } from "./types";
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
+import { getPlayoffSeriesSummary } from "./normalization/playoffSeriesSummary";
 
-export const normalizeScheduledGames = (
-  games: ScheduledGame[],
-  bootstrap: BootstrapResponse
-): Game[] => games.map((g) => normalizeScheduledGame(g, bootstrap));
+type NormalizeScheduledGamesOptions = {
+  readonly games: ScheduledGame[];
+  readonly bootstrap: BootstrapResponse;
+  readonly gamePreviews: GamePreview[];
+};
+
+export const normalizeScheduledGames = ({
+  games,
+  bootstrap,
+  gamePreviews,
+}: NormalizeScheduledGamesOptions): Game[] =>
+  games.map((g) =>
+    normalizeScheduledGame({ game: g, bootstrap, gamePreviews })
+  );
 
 const ApiGameStatusToGameStatus: Record<string, GameStatus> = {
   "1": "Scheduled",
@@ -15,14 +26,19 @@ const ApiGameStatusToGameStatus: Record<string, GameStatus> = {
   "10": "Live",
 };
 
-type NormalizeScheduledGame = (
-  game: ScheduledGame,
-  bootstrap: BootstrapResponse
-) => Game;
-export const normalizeScheduledGame: NormalizeScheduledGame = (
+type NormalizeScheduledGameOptions = {
+  readonly game: ScheduledGame;
+  readonly bootstrap: BootstrapResponse;
+  readonly gamePreviews: GamePreview[];
+};
+
+type NormalizeScheduledGame = (options: NormalizeScheduledGameOptions) => Game;
+export const normalizeScheduledGame: NormalizeScheduledGame = ({
   game,
-  bootstrap
-) => {
+  bootstrap,
+  gamePreviews,
+}) => {
+  const gameId = parseInt(game.ID);
   const homeTeam: Team = {
     abbrev: game.HomeCode,
     city: game.HomeCity,
@@ -53,7 +69,7 @@ export const normalizeScheduledGame: NormalizeScheduledGame = (
 
   return {
     clockTime: game.GameClock,
-    id: parseInt(game.ID),
+    id: gameId,
     startTime: startTime.getTime(),
     startTimeUtc: startTimeUtc.getTime(),
     homeGoals: parseInt(game.HomeGoals),
@@ -64,5 +80,10 @@ export const normalizeScheduledGame: NormalizeScheduledGame = (
     visitorTeam,
     isInIntermission: game.Intermission === "1",
     isPlayoffGame: bootstrap.playoffSeasons.some((s) => s.id === game.SeasonID),
+    playoffSeriesSummary: getPlayoffSeriesSummary({
+      homeTeam,
+      gamePreview: gamePreviews.find((gp) => gp.gameId === gameId),
+      visitorTeam,
+    }),
   };
 };
