@@ -1,4 +1,5 @@
-import type { LinksFunction } from "@remix-run/node";
+import { cssBundleHref } from "@remix-run/css-bundle";
+import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,10 +8,18 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import styles from "./tailwind.css";
+import "~/tailwind.css";
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: "AHL App",
+    },
+  ];
+};
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
+  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "icon", href: "/favicon.png", type: "image/png" },
 ];
 

@@ -1,6 +1,5 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import type { V2_MetaFunction } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 import { getGamesByDate } from "~/api";
 import { DateSelector } from "~/components/DateSelector";
@@ -10,10 +9,6 @@ import type { Game } from "~/data/types";
 import { getToday } from "~/date-fns";
 import { useDays } from "~/hooks/useDays";
 import { useGames } from "~/hooks/useGames";
-
-export const meta: V2_MetaFunction = () => {
-  return [{ title: "AHL Remix" }];
-};
 
 export const loader: LoaderFunction = async () => {
   const today = getToday();

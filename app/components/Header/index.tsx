@@ -10,7 +10,6 @@ export const Header = () => (
     </Link>
     <nav className="flex gap-6">
       <NavLink to="/">Home</NavLink>
-      <NavLink to="/standings">Standings</NavLink>
     </nav>
   </header>
 );
