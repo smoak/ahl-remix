@@ -20,20 +20,8 @@ const FinalOvertime = ({ otPeriods }: { otPeriods: number }) => {
   );
 };
 
-// const FinalShootout = () => (
-//   <>
-//     <span className="mx-auto block">Final/SO</span>
-//     <span className="mx-auto block pt-6"></span>
-//   </>
-// );
-
 export const FinalGameStatus = ({ endedInPeriod }: FinalGameStatusProps) => {
-  // const endedInShootout = gameType === "R" && endedInPeriod === 5;
   const endedInOvertime = endedInPeriod > 3;
-
-  // if (endedInShootout) {
-  //   return <FinalShootout />;
-  // }
 
   if (endedInOvertime) {
     const otPeriods = endedInPeriod - 3;

@@ -51,9 +51,6 @@ export const ScoringSummary = ({
   const thirdPeriodScoringPlays = scoringDetails.filter(
     (sp) => sp.period === 3
   );
-  // const otPeriodScoringPlays = scoringDetails.filter(
-  //   (sp) => ![1, 2, 3].includes(sp.period) && sp.periodOrdinalNum !== "SO"
-  // );
 
   return (
     <div>
