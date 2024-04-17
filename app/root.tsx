@@ -13,7 +13,7 @@ import "~/tailwind.css";
 export const meta: MetaFunction = () => {
   return [
     {
-      title: "AHL App",
+      title: "AHL Remix",
     },
     {
       name: "description",
@@ -34,7 +34,7 @@ export const links: LinksFunction = () => [
   { rel: "icon", href: "/favicon.png", type: "image/png" },
 ];
 
-export default function App() {
+const App = () => {
   return (
     <html lang="en">
       <head>
@@ -49,4 +49,6 @@ export default function App() {
       </body>
     </html>
   );
-}
+};
+
+export default App;

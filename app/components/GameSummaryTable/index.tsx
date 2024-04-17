@@ -1,49 +1,60 @@
-import type { GameDetails } from "~/data/types";
-import { LiveGameSummaryTable } from "../LiveGameSummaryTable";
-import { TableCell } from "../Table";
+import { TableCell } from "../Table/TableCell";
+import { TeamNameTableCell } from "../Table/TeamNameTableCell";
+import type { FinalGame, GameStats, LiveGame } from "../types";
+import { LiveGameSummaryTable } from "./LiveGameSummaryTable";
 
 type GameSummaryTableProps = {
-  readonly gameDetails: GameDetails;
+  readonly game: LiveGame | FinalGame;
+  readonly gameStats: GameStats;
 };
 
-export const GameSummaryTable = ({ gameDetails }: GameSummaryTableProps) => {
-  if (gameDetails.game.status === "Live") {
-    return <LiveGameSummaryTable gameDetails={gameDetails} />;
+export const GameSummaryTable = ({
+  game,
+  gameStats,
+}: GameSummaryTableProps) => {
+  if (game.gameState === "Live") {
+    return <LiveGameSummaryTable game={game} gameStats={gameStats} />;
   }
 
   return (
-    <table className="my-5 min-w-full border border-black text-center text-ahl-gray-50 md:min-w-min">
-      <thead className="bg-black font-bold">
+    <table className="my-5 min-w-full border border-slate-900 text-center md:w-80 md:min-w-min lg:w-96">
+      <thead className="bg-slate-900 font-bold text-white">
         <tr>
           <TableCell>Team</TableCell>
-          {gameDetails.periods.map((p) => (
-            <TableCell key={p.ordinalNum}>{p.ordinalNum}</TableCell>
+          {gameStats.periods.map((p) => (
+            <TableCell key={p.num}>{p.ordinalNum}</TableCell>
           ))}
           <TableCell>T</TableCell>
         </tr>
       </thead>
       <tbody>
         <tr className="text-black">
-          <TableCell>{gameDetails.game.visitorTeam.abbrev}</TableCell>
-          {gameDetails.periods.map((p) => (
-            <TableCell
-              key={[p.ordinalNum, gameDetails.game.visitorTeam.id].join("")}
-            >
+          <TeamNameTableCell
+            shotsOnGoal={gameStats.visitingTeam.sog}
+            team={game.visitingTeam}
+          />
+          {gameStats.periods.map((p) => (
+            <TableCell key={[p.num, game.visitingTeam.id].join("")}>
               {p.visitorGoals}
             </TableCell>
           ))}
-          <TableCell>{gameDetails.game.visitorGoals}</TableCell>
+          <TableCell className="font-bold">
+            {gameStats.visitingTeam.score}
+          </TableCell>
         </tr>
         <tr className="text-black">
-          <TableCell>{gameDetails.game.homeTeam.abbrev}</TableCell>
-          {gameDetails.periods.map((p) => (
-            <TableCell
-              key={[p.ordinalNum, gameDetails.game.homeTeam.id].join("")}
-            >
+          <TeamNameTableCell
+            shotsOnGoal={gameStats.homeTeam.sog}
+            team={game.homeTeam}
+          />
+          {gameStats.periods.map((p) => (
+            <TableCell key={[p.num, game.homeTeam.id].join("")}>
               {p.homeGoals}
             </TableCell>
           ))}
-          <TableCell>{gameDetails.game.homeGoals}</TableCell>
+          <TableCell className="font-bold">
+            {gameStats.homeTeam.score}
+          </TableCell>
         </tr>
       </tbody>
     </table>

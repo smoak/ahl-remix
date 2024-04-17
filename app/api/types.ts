@@ -1,3 +1,5 @@
+export type GameStatus = "1" | "2" | "3" | "4" | "10";
+
 export type ScheduledGame = {
   readonly ID: string;
   readonly SeasonID: string;
@@ -28,7 +30,7 @@ export type ScheduledGame = {
   readonly VisitorOTLosses: string;
   readonly GameStatusString: string;
   readonly GameStatusStringLong: string;
-  readonly GameStatus: string;
+  readonly GameStatus: GameStatus;
   readonly GameClock: string;
   readonly Period: string;
   readonly Intermission: string;
@@ -200,3 +202,70 @@ type Season = {
   readonly id: string;
   readonly name: string;
 };
+
+export type StandingsResponseSectionData = {
+  readonly prop: {
+    readonly team_code: {
+      readonly teamLink: string;
+    };
+    readonly name: {
+      readonly teamLink: string;
+    };
+  };
+
+  readonly row: {
+    readonly team_code: string;
+    readonly wins: string;
+    readonly streak: string;
+    readonly shootout_losses: string;
+    readonly row: string;
+    readonly regulation_wins: string;
+    readonly rank: number;
+    readonly points: string;
+    readonly percentage: string;
+    readonly penalty_minutes: string;
+    readonly past_10: string;
+    readonly overall_rank: string;
+    readonly ot_losses: string;
+    readonly name: string;
+    readonly losses: string;
+    readonly goals_for: string;
+    readonly goals_against: string;
+    readonly games_remaining: string;
+    readonly games_played: string;
+  };
+};
+
+type HeaderProperties = {
+  readonly key: "team_code" | "rank" | "overall_rank";
+  readonly hidden: boolean;
+  readonly class: string;
+  readonly label: string;
+  readonly title: string;
+  readonly sortable: boolean;
+  readonly align: string;
+  readonly highlight: boolean;
+  readonly sortKey: string;
+};
+
+type Header = {
+  readonly properties: HeaderProperties;
+};
+
+export type StandingsResponseSectionHeaders = {
+  readonly overall_rank: Header;
+  readonly rank: Header;
+  readonly team_code: Header;
+};
+
+export type StandingsResponseSection = {
+  readonly title: string;
+  readonly headers: StandingsResponseSectionHeaders;
+  readonly data: StandingsResponseSectionData[];
+};
+
+export type StandingsResponseObject = {
+  readonly sections: StandingsResponseSection[];
+};
+
+export type StandingsResponse = StandingsResponseObject[];

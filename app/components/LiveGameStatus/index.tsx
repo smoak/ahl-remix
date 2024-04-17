@@ -1,9 +1,4 @@
-export type LiveGameStatusProps = {
-  readonly isIntermission: boolean;
-  readonly isPlayoffGame: boolean;
-  readonly period: number;
-  readonly gameClock: string;
-};
+import type { GameClock } from "../types";
 
 // TODO: i18n
 const pr = new Intl.PluralRules("en-US", { type: "ordinal" });
@@ -26,13 +21,18 @@ const LiveIndicator = () => (
   </span>
 );
 
+type LiveGameStatusProps = {
+  readonly gameClock: GameClock;
+  readonly isPlayoffGame: boolean;
+};
+
 export const LiveGameStatus = ({
   gameClock,
-  isIntermission,
   isPlayoffGame,
-  period,
 }: LiveGameStatusProps): JSX.Element => {
-  if (isIntermission) {
+  const { clockTime, isInIntermission, period } = gameClock;
+
+  if (isInIntermission) {
     return (
       <>
         {formatOrdinals(period)} - END
@@ -44,7 +44,7 @@ export const LiveGameStatus = ({
   if (period < 4) {
     return (
       <>
-        {formatOrdinals(period)} - {gameClock}
+        {formatOrdinals(period)} - {clockTime}
         <LiveIndicator />
       </>
     );
@@ -53,7 +53,7 @@ export const LiveGameStatus = ({
   if (period === 4) {
     return (
       <>
-        OT - {gameClock}
+        OT - {clockTime}
         <LiveIndicator />
       </>
     );
@@ -62,7 +62,7 @@ export const LiveGameStatus = ({
   if (!isPlayoffGame) {
     return (
       <>
-        SO - {gameClock}
+        SO - {clockTime}
         <LiveIndicator />
       </>
     );
@@ -72,7 +72,7 @@ export const LiveGameStatus = ({
 
   return (
     <>
-      {otPeriods}OT - {gameClock}
+      {otPeriods}OT - {clockTime}
       <LiveIndicator />
     </>
   );

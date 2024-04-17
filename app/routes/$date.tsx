@@ -6,18 +6,21 @@ import { DateSelector } from "~/components/DateSelector";
 import { GamesList } from "~/components/GamesList";
 import { Layout } from "~/components/Layout";
 import { useDays } from "~/hooks/useDays";
-import { DATE_LINK_FORMAT } from "~/date-fns";
-import { parse } from "date-fns";
-import type { Game } from "~/data/types";
+import type { Game } from "~/components/types";
+import { normalizeGames } from "~/data/normalization/games";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { date } = params;
 
-  const games = await getGamesByDate(
-    date ? parse(date, DATE_LINK_FORMAT, new Date()) : undefined
-  );
+  if (date == null) {
+    throw new Response(null, { status: 404, statusText: "Not Found" });
+  }
 
-  return json<Game[]>(games);
+  const scheduledGames = await getGamesByDate(new Date(date));
+
+  const normalizedGames = normalizeGames(scheduledGames);
+
+  return json(normalizedGames);
 };
 
 export const Index = () => {
@@ -29,7 +32,7 @@ export const Index = () => {
     <Layout>
       <h1 className="mb-3 text-4xl font-bold">Games</h1>
       <DateSelector day={day} prevDay={prevDay} nextDay={nextDay} />
-      <GamesList games={games} />
+      <GamesList games={games} filter={day} />
     </Layout>
   );
 };

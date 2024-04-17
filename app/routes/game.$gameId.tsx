@@ -1,13 +1,13 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getGameDetails } from "~/api";
+import { getGameSummary } from "~/api";
 import { BackButton } from "~/components/BackButton";
 import { GameCard } from "~/components/GameCard";
 import { GameSummary } from "~/components/GameSummary";
 import { Layout } from "~/components/Layout";
-import { ScoringSummary } from "~/components/ScoringSummary";
-import type { GameDetails } from "~/data/types";
+import { normalizeGameDetails } from "~/data/normalization/gameDetails";
+import type { GameDetails } from "~/components/types";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { gameId } = params;
@@ -16,7 +16,8 @@ export const loader: LoaderFunction = async ({ params }) => {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const gameDetails = await getGameDetails(gameId);
+  const gameSummary = await getGameSummary(gameId);
+  const gameDetails = normalizeGameDetails(gameSummary);
 
   return json(gameDetails);
 };
@@ -32,11 +33,6 @@ export const Index = () => {
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <GameSummary gameDetails={gameDetails} />
-        <ScoringSummary
-          scoringDetails={gameDetails.scoringDetails}
-          visitorTeam={gameDetails.game.visitorTeam}
-          homeTeam={gameDetails.game.homeTeam}
-        />
       </div>
     </Layout>
   );
