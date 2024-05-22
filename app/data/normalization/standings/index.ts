@@ -13,7 +13,8 @@ const normalizeStandingsRecord = ({
   return {
     gamesPlayed: parseInt(row.games_played),
     losses: parseInt(row.losses),
-    otLosses: parseInt(row.ot_losses),
+    otLosses: parseInt(row.non_reg_losses),
+    otWins: parseInt(row.non_reg_wins),
     points: parseInt(row.points),
     pointsPercentage: parseInt(row.percentage),
     regulationWins: parseInt(row.regulation_wins),

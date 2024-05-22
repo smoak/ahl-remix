@@ -126,6 +126,7 @@ export type StandingsRecord = {
   readonly gamesPlayed: number;
   readonly regulationWins: number;
   readonly losses: number;
+  readonly otWins: number;
   readonly otLosses: number;
   readonly points: number;
   readonly pointsPercentage: number;
@@ -149,3 +150,38 @@ export type Standings = {
   readonly division: DivisionStandings;
   readonly league: StandingsRecord[];
 };
+
+export type PlayoffTeam = {
+  readonly id: string;
+  readonly name: string;
+  readonly abbrev: string;
+  readonly logo: string;
+  readonly seriesWins: number;
+};
+
+export type PlayoffMatchup = {
+  readonly id: string;
+  readonly highSeed: PlayoffTeam;
+  readonly lowSeed: PlayoffTeam;
+  readonly winner?: PlayoffTeam;
+  readonly winsRequired: number;
+};
+
+export type PlayoffRound = {
+  readonly id: number;
+  readonly roundNumber: number;
+  readonly name: string;
+  readonly hasStarted: boolean;
+  readonly matchups: PlayoffMatchup[];
+};
+
+export type PlayoffBracket = {
+  readonly rounds: PlayoffRound[];
+};
+
+export type Bootstrap = {
+  readonly playoffsStarted: boolean;
+};
+export type WithBootstrap<T> = {
+  readonly content: T;
+} & Bootstrap;

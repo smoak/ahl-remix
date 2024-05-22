@@ -3,13 +3,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "ahl-blue": {
-          100: "#C8CEEA",
-          400: "#6674C2",
-          700: "#3D49A1",
-          800: "#353F95",
-          900: "#292E7F",
-        },
         "ahl-red": {
           50: "#DB0032",
           100: "#DD3333",
@@ -20,8 +13,18 @@ module.exports = {
         "ahl-gray": {
           50: "#DDDDDD",
         },
-        blue: {
-          1000: "#5963b3",
+        "ahl-blue": {
+          50: "#f3f5fb",
+          100: "#e5e8f4",
+          200: "#d0d7ed",
+          300: "#b0bde0",
+          400: "#8b9bcf",
+          500: "#6f7dc2",
+          600: "#5963b3",
+          700: "#5156a4",
+          800: "#464887",
+          900: "#3c3e6c",
+          950: "#282943",
         },
       },
       gridTemplateColumns: {
