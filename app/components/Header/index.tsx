@@ -1,9 +1,27 @@
-import { Link, NavLink } from "@remix-run/react";
+import { Link, NavLink, useLoaderData } from "@remix-run/react";
+import type { WithBootstrap } from "../types";
 
 const linkClass =
   "text-lg transition-opacity hover:opacity-70 border-b-2 border-transparent hover:border-slate-900";
 const activeLinkClass =
   "text-lg transition-opacity hover:opacity-70 border-b-2 border-slate-900";
+
+const PlayoffsLink = () => {
+  const { playoffsStarted } = useLoaderData<WithBootstrap<unknown>>();
+
+  if (!playoffsStarted) {
+    return;
+  }
+
+  return (
+    <NavLink
+      to="/playoffs"
+      className={({ isActive }) => (isActive ? activeLinkClass : linkClass)}
+    >
+      Playoffs
+    </NavLink>
+  );
+};
 
 export const Header = () => (
   <header className="container mx-auto flex items-center justify-between">
@@ -26,6 +44,7 @@ export const Header = () => (
       >
         Standings
       </NavLink>
+      <PlayoffsLink />
     </nav>
   </header>
 );

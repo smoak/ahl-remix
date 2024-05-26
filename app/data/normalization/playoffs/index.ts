@@ -55,7 +55,7 @@ const normalizePlayoffRound = (
 ): PlayoffRound => {
   const id = parseInt(round.round);
   const matchups = round.matchups
-    .filter((r) => r.games.length > 0)
+    .filter((r) => r.team1 !== "0" && r.team2 !== "0")
     .map((m) => normalizeMatchup(m, teams));
 
   return {

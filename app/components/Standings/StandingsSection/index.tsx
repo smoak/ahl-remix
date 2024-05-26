@@ -1,5 +1,6 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import { TeamLogo } from "~/components/TeamLogo";
-import type { StandingsRecord } from "~/components/types";
+import { type Bootstrap, type StandingsRecord } from "~/components/types";
 
 type StandingsSectionProps = {
   readonly headingText?: string;
@@ -21,6 +22,43 @@ const Cell = ({ children, className }: CellProps) => {
     >
       {children}
     </div>
+  );
+};
+
+const useLogoUrl = (teamId: string) => {
+  const bootstrap = useRouteLoaderData<Bootstrap>("routes/standings");
+
+  if (bootstrap == null || bootstrap.teams[teamId] == null) {
+    return `https://assets.leaguestat.com/ahl/logos/50x50/${teamId}.png`;
+  }
+
+  return bootstrap.teams[teamId].logo;
+};
+
+type StandingsRowProps = {
+  readonly record: StandingsRecord;
+  readonly rank: number;
+};
+const StandingsRow = ({ rank, record }: StandingsRowProps) => {
+  const logoUrl = useLogoUrl(record.teamId);
+
+  return (
+    <>
+      <Cell>{rank}</Cell>
+      <Cell className="w-1/4">
+        <div className="flex items-center gap-4">
+          <TeamLogo logoUrl={logoUrl} teamName={record.teamName} size="sm" />
+          <span className="hidden text-left md:block">{record.teamName}</span>
+          <span className="md:hidden">{record.teamAbbrev}</span>
+        </div>
+      </Cell>
+      <Cell>{record.gamesPlayed}</Cell>
+      <Cell>{record.regulationWins}</Cell>
+      <Cell>{record.losses}</Cell>
+      <Cell>{record.otLosses}</Cell>
+      <Cell>{record.shootoutLossess}</Cell>
+      <Cell>{record.points}</Cell>
+    </>
   );
 };
 
@@ -51,26 +89,7 @@ export const StandingsSection = ({
         <div className="table-row-group">
           {standings.map((s, index) => (
             <div className="table-row h-14 text-center" key={s.teamAbbrev}>
-              <Cell>{index + 1}</Cell>
-              <Cell className="w-1/4">
-                <div className="flex items-center gap-4">
-                  <TeamLogo
-                    logoUrl={s.teamLogoUrl}
-                    teamName={s.teamName}
-                    size="sm"
-                  />
-                  <span className="hidden text-left md:block">
-                    {s.teamName}
-                  </span>
-                  <span className="md:hidden">{s.teamAbbrev}</span>
-                </div>
-              </Cell>
-              <Cell>{s.gamesPlayed}</Cell>
-              <Cell>{s.regulationWins}</Cell>
-              <Cell>{s.losses}</Cell>
-              <Cell>{s.otLosses}</Cell>
-              <Cell>{s.shootoutLossess}</Cell>
-              <Cell>{s.points}</Cell>
+              <StandingsRow rank={index + 1} record={s} />
             </div>
           ))}
         </div>

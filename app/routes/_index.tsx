@@ -1,28 +1,33 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getGamesByDate } from "~/api";
+import { getBootstrap, getGamesByDate } from "~/api";
 import { DateSelector } from "~/components/DateSelector";
 import { GamesList } from "~/components/GamesList";
 import { Layout } from "~/components/Layout";
 import { normalizeGames } from "~/data/normalization/games";
-import type { Game } from "~/components/types";
+import type { Game, WithBootstrap } from "~/components/types";
 import { getToday } from "~/date-fns";
 import { useDays } from "~/hooks/useDays";
 import { useGames } from "~/hooks/useGames";
+import { normalizeBootstrap } from "~/data/normalization/bootstrap";
 
 export const loader: LoaderFunction = async () => {
-  console.log("app/routes/_index.tsx loader running");
   const today = getToday();
   const scheduledGames = await getGamesByDate(today);
+  const bootstrap = await getBootstrap();
 
   const normalizedGames = normalizeGames(scheduledGames);
+  const normalizedBootstrap = normalizeBootstrap(bootstrap);
 
-  return json(normalizedGames);
+  return json<WithBootstrap<Game[]>>({
+    content: normalizedGames,
+    ...normalizedBootstrap,
+  });
 };
 
 const Index = () => {
-  const loadedGames = useLoaderData<Game[]>();
+  const { content: loadedGames } = useLoaderData<WithBootstrap<Game[]>>();
   const { prevDay, day, nextDay } = useDays();
   const games = useGames({ route: "?index", preloadedGames: loadedGames });
 

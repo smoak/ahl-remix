@@ -6,7 +6,6 @@ import { normalizeConferenceStandings } from "~/data/normalization/standings";
 export const loader: LoaderFunction = async () => {
   const standingsResponse = await getStandings("conference");
   const normalizedStandings = normalizeConferenceStandings(standingsResponse);
-  console.log(normalizedStandings);
 
   return json(normalizedStandings);
 };

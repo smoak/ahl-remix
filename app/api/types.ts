@@ -82,6 +82,15 @@ export type GameCenterPreviewResponse = {
   readonly visitingTeam: {};
 };
 
+export type BootstrapTeam = {
+  readonly id: string;
+  readonly name: string;
+  readonly nickname: string;
+  readonly team_code: string;
+  readonly division_id: string;
+  readonly logo: string;
+};
+
 export type BootstrapResponse = {
   readonly current_league_id: string;
   readonly current_season_id: string;
@@ -90,6 +99,7 @@ export type BootstrapResponse = {
   readonly firebaseApiKey: string;
   readonly regularSeasons: Season[];
   readonly playoffSeasons: Season[];
+  readonly teamsNoAll: BootstrapTeam[];
 };
 
 export type GameSummaryDetails = {
@@ -218,25 +228,23 @@ export type StandingsResponseSectionData = {
   readonly row: {
     readonly team_code: string;
     readonly wins: string;
-    readonly streak: string;
-    readonly shootout_losses: string;
-    readonly row: string;
-    readonly regulation_wins: string;
-    readonly rank: number;
-    readonly points: string;
-    readonly percentage: string;
-    readonly penalty_minutes: string;
-    readonly past_10: string;
-    readonly overall_rank: string;
-    readonly ot_losses: string;
-    readonly name: string;
     readonly losses: string;
+    readonly ot_losses: string;
+    readonly shootout_losses: string;
+    readonly regulation_wins: string;
+    readonly row: string;
+    readonly points: string;
+    readonly penalty_minutes: string;
+    readonly streak: string;
     readonly goals_for: string;
     readonly goals_against: string;
     readonly games_remaining: string;
+    readonly percentage: string;
+    readonly overall_rank: string;
     readonly games_played: string;
-    readonly non_reg_wins: string;
-    readonly non_reg_losses: string;
+    readonly rank: number;
+    readonly past_10: string;
+    readonly name: string;
   };
 };
 

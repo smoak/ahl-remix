@@ -120,13 +120,13 @@ export type GameDetails = {
 };
 
 export type StandingsRecord = {
+  readonly teamId: string;
   readonly teamAbbrev: string;
   readonly teamName: string;
   readonly teamLogoUrl: string;
   readonly gamesPlayed: number;
   readonly regulationWins: number;
   readonly losses: number;
-  readonly otWins: number;
   readonly otLosses: number;
   readonly points: number;
   readonly pointsPercentage: number;
@@ -179,8 +179,19 @@ export type PlayoffBracket = {
   readonly rounds: PlayoffRound[];
 };
 
+export type BootstrapTeam = {
+  readonly id: string;
+  readonly name: string;
+  readonly nickName: string;
+  readonly teamCode: string;
+  readonly divisionId: string;
+  readonly logo: string;
+};
+
 export type Bootstrap = {
   readonly playoffsStarted: boolean;
+  readonly currentSeasonId: number;
+  readonly teams: Record<string, BootstrapTeam>;
 };
 export type WithBootstrap<T> = {
   readonly content: T;

@@ -1,10 +1,20 @@
 import { Layout } from "~/components/Layout";
-import { NavLink, Outlet } from "@remix-run/react";
+import { NavLink, Outlet, json } from "@remix-run/react";
+import { getBootstrap } from "~/api";
+import type { LoaderFunction } from "@remix-run/node";
+import { normalizeBootstrap } from "~/data/normalization/bootstrap";
 
 const baseNavLinkClassNames =
   "inline-block rounded-md border-b-2 p-4 hover:text-ahl-blue-100 hover:border-ahl-blue-100 hover:bg-slate-700";
 const inactiveNavLinkClassNames = `${baseNavLinkClassNames} border-transparent`;
 const activeNavLinkClassNames = `${baseNavLinkClassNames} text-ahl-blue-100 border-ahl-blue-100 bg-slate-900`;
+
+export const loader: LoaderFunction = async () => {
+  const bootstrap = await getBootstrap();
+  const normalizedBootstrap = normalizeBootstrap(bootstrap);
+
+  return json({ ...normalizedBootstrap });
+};
 
 const Index = () => {
   return (
