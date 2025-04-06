@@ -1,6 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { type Game, isLiveGame } from "~/components/types";
+import { type Game, isLiveGame, type WithBootstrap } from "~/components/types";
 import { useRevalidateOnInterval } from "./useRevalidateOnInterval";
 import { useRevalidateOnVisible } from "./useRevalidateOnVisible";
 
@@ -12,7 +12,7 @@ type Options = {
 };
 
 export const useGames = ({ route, preloadedGames }: Options) => {
-  const fetcher = useFetcher<Game[]>();
+  const fetcher = useFetcher<WithBootstrap<Game[]>>();
   const [games, setGames] = useState(preloadedGames);
   const revalidate = () => {
     if (preloadedGames.some(isLiveGame)) {
@@ -21,7 +21,7 @@ export const useGames = ({ route, preloadedGames }: Options) => {
   };
   useEffect(() => {
     if (fetcher.data) {
-      setGames(fetcher.data);
+      setGames(fetcher.data.content);
     }
   }, [fetcher.data]);
 
