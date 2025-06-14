@@ -96,7 +96,7 @@ const normalizeGameStats = (apiGameSummary: GameSummaryResponse): GameStats => {
     homeTeam: normalizeTeamStats(apiGameSummary.homeTeam),
     visitingTeam: normalizeTeamStats(apiGameSummary.visitingTeam),
     periods: apiGameSummary.periods.map(normalizeGameSummaryPeriod),
-    scoringPlays: normalizeScoringDetails(apiGameSummary.periods),
+    scoringPlays: normalizeScoringDetails(apiGameSummary),
   };
 };
 
@@ -170,42 +170,113 @@ const normalizeGoalType = ({
   return "Even";
 };
 
-const normalizeScoringDetails = (periods: GameSummaryResponse["periods"]) => {
-  return periods.reduce<ScoringPlays>((accum, scoring) => {
-    const periodNum = parseInt(scoring.info.id);
-    accum[periodNum] = scoring.goals.map<ScoringPlay>((goal) => {
-      const primaryAssist = normalizeAssist(
-        goal.assists[0],
-        parseInt(goal.assistNumbers[0])
+type NormalizeScoringPlayOptions = {
+  readonly goal: GameSummaryPeriodGoal;
+  readonly homeTeam: GameSummaryTeam;
+  readonly visitingTeam: GameSummaryTeam;
+  readonly homeScore: number;
+  readonly visitorScore: number;
+};
+const normalizeScoringPlay = ({
+  goal,
+  homeScore,
+  homeTeam,
+  visitingTeam,
+  visitorScore,
+}: NormalizeScoringPlayOptions): ScoringPlay => {
+  const periodNum = parseInt(goal.period.id);
+  const goalScorer = {
+    id: goal.scoredBy.id,
+    firstName: goal.scoredBy.firstName,
+    headshotUrl: goal.scoredBy.playerImageURL,
+    lastName: goal.scoredBy.lastName,
+    seasonGoals: parseInt(goal.scorerGoalNumber),
+  };
+  const primaryAssist = normalizeAssist(
+    goal.assists[0],
+    parseInt(goal.assistNumbers[0])
+  );
+  const secondaryAssist = normalizeAssist(
+    goal.assists[1],
+    parseInt(goal.assistNumbers[1])
+  );
+  const scoringTeam = {
+    id: goal.team.id,
+    logoUrl: goal.team.logo,
+    name: goal.team.name,
+  };
+  const goalType = normalizeGoalType(goal.properties);
+  const leadingTeamAbbrev =
+    homeScore > visitorScore
+      ? homeTeam.info.abbreviation
+      : visitorScore > homeScore
+      ? visitingTeam.info.abbreviation
+      : undefined;
+
+  return {
+    period: periodNum,
+    goalScorer,
+    goalType,
+    homeScore,
+    scoringTeam,
+    timeInPeriod: goal.time,
+    visitorScore,
+    leadingTeamAbbrev,
+    primaryAssist,
+    secondaryAssist,
+  };
+};
+
+const normalizeScoringDetails = ({
+  periods,
+  homeTeam,
+  visitingTeam,
+}: GameSummaryResponse) => {
+  const { scoringPlays } = periods.reduce(
+    (accum, period) => {
+      const periodNum = parseInt(period.info.id);
+
+      const { homeScore, visitorScore, scoringPlays } = period.goals.reduce(
+        (prev, goal) => {
+          const isHomeGoal = goal.team.id === homeTeam.info.id;
+          const homeScore = isHomeGoal ? prev.homeScore + 1 : prev.homeScore;
+          const visitorScore = isHomeGoal
+            ? prev.visitorScore
+            : prev.visitorScore + 1;
+
+          const scoringPlay = normalizeScoringPlay({
+            homeTeam,
+            goal,
+            visitingTeam,
+            homeScore,
+            visitorScore,
+          });
+
+          return {
+            homeScore,
+            visitorScore,
+            scoringPlays: [...prev.scoringPlays, scoringPlay],
+          };
+        },
+        {
+          homeScore: accum.homeScore,
+          visitorScore: accum.visitorScore,
+          scoringPlays: [] as ScoringPlay[],
+        }
       );
-      const secondaryAssist = normalizeAssist(
-        goal.assists[1],
-        parseInt(goal.assistNumbers[1])
-      );
+
+      accum.scoringPlays[periodNum] = scoringPlays;
 
       return {
-        goalScorer: {
-          id: goal.scoredBy.id,
-          firstName: goal.scoredBy.firstName,
-          headshotUrl: goal.scoredBy.playerImageURL,
-          lastName: goal.scoredBy.lastName,
-          seasonGoals: parseInt(goal.scorerGoalNumber),
-        },
-        period: periodNum,
-        scoringTeam: {
-          id: goal.team.id,
-          logoUrl: goal.team.logo,
-          name: goal.team.name,
-        },
-        timeInPeriod: goal.time,
-        primaryAssist,
-        secondaryAssist,
-        goalType: normalizeGoalType(goal.properties),
+        scoringPlays: accum.scoringPlays,
+        homeScore,
+        visitorScore,
       };
-    });
+    },
+    { homeScore: 0, visitorScore: 0, scoringPlays: {} as ScoringPlays }
+  );
 
-    return accum;
-  }, {});
+  return scoringPlays;
 };
 
 type NormalizeGameDetails = (

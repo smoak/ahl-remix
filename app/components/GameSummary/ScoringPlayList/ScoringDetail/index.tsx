@@ -3,6 +3,7 @@ import { TeamLogo } from "~/components/TeamLogo";
 import type { ScoringPlay } from "~/components/types";
 import { AssistInfo } from "../AssistInfo";
 import { ScoringType } from "../ScoringType";
+import { ScoreText } from "../ScoreText";
 
 type ScoringDetailProps = {
   readonly scoringPlay: ScoringPlay;
@@ -47,6 +48,7 @@ export const ScoringDetail = ({
           </div>
         </div>
         <div className="flex gap-6">
+          <ScoreText scoringPlay={scoringPlay} />
           <div className="flex flex-col">
             Time
             <div className="font-bold">{timeInPeriod}</div>

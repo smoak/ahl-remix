@@ -92,6 +92,9 @@ export type ScoringPlay = {
   readonly goalType: GoalType;
   readonly primaryAssist?: ScoringPlayAssister;
   readonly secondaryAssist?: ScoringPlayAssister;
+  readonly leadingTeamAbbrev?: string;
+  readonly visitorScore: number;
+  readonly homeScore: number;
 };
 export type ScoringPlays = Record<number, ScoringPlay[]>;
 
