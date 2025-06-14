@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   const gameSummary = await getGameSummary(gameId);
   const bootstrap = await getBootstrap();
-  const gameDetails = normalizeGameDetails(gameSummary);
+  const gameDetails = normalizeGameDetails(gameSummary, bootstrap);
   const normalizedBootstrap = normalizeBootstrap(bootstrap);
 
   return json<WithBootstrap<GameDetails>>({

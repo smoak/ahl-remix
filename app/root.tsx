@@ -1,4 +1,3 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import {
   Links,
@@ -30,7 +29,6 @@ export const meta: MetaFunction = () => {
 };
 
 export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "icon", href: "/favicon.png", type: "image/png" },
 ];
 

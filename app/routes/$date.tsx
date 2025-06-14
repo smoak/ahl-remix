@@ -20,7 +20,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const bootstrap = await getBootstrap();
   const scheduledGames = await getGamesByDate(new Date(date));
 
-  const normalizedGames = normalizeGames(scheduledGames);
+  const normalizedGames = normalizeGames(scheduledGames, bootstrap);
   const normalizedBootstrap = normalizeBootstrap(bootstrap);
 
   return json<WithBootstrap<Game[]>>({

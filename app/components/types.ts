@@ -1,11 +1,12 @@
 export type GameState = "Live" | "Scheduled" | "Final";
-
+export type GameType = "RegularSeason" | "PreSeason" | "Playoff";
 export type EndState = "Regulation" | "OT" | "SO";
 
 export type Game = LiveGame | ScheduledGame | FinalGame;
 
 type BaseGame = {
   readonly id: number;
+  readonly type: GameType;
   readonly homeTeam: Team;
   readonly visitingTeam: Team;
   readonly gameState: GameState;
@@ -32,6 +33,7 @@ export type FinalGame =
       readonly homeScore: number;
       readonly visitingScore: number;
       readonly endState: EndState;
+      readonly endedInPeriod: number;
     };
 
 export type ScheduledGame =

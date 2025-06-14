@@ -1,4 +1,5 @@
 import type {
+  BootstrapResponse,
   GameSummaryPeriod,
   GameSummaryPeriodGoal,
   GameSummaryPeriodGoalAssist,
@@ -20,17 +21,22 @@ import type {
   TeamStats,
 } from "~/components/types";
 import { normalizeEndState } from "./endState";
+import { normalizeGameType } from "./gameType";
 
-const normalizeFinalGame = ({
-  details,
-  homeTeam,
-  periods,
-  visitingTeam,
-}: GameSummaryResponse): FinalGame => {
+const normalizeFinalGame = (
+  { details, homeTeam, periods, visitingTeam }: GameSummaryResponse,
+  bootstrapResponse: BootstrapResponse
+): FinalGame => {
   const endedInPeriod = parseInt(periods[periods.length - 1].info.id);
+  const gameType = normalizeGameType(
+    bootstrapResponse.playoffSeasons,
+    details.seasonId
+  );
 
   return {
     gameDate: details.GameDateISO8601,
+    endedInPeriod,
+    type: gameType,
     gameState: "Final",
     homeScore: homeTeam.stats.goals,
     homeTeam: normalizeTeam(homeTeam),
@@ -56,12 +62,17 @@ const normalizeTeam = (team: GameSummaryTeam): Team => {
   };
 };
 
-const normalizeScheduledGame = ({
-  details,
-  homeTeam,
-  visitingTeam,
-}: GameSummaryResponse): ScheduledGame => {
+const normalizeScheduledGame = (
+  { details, homeTeam, visitingTeam }: GameSummaryResponse,
+  bootstrapResponse: BootstrapResponse
+): ScheduledGame => {
+  const gameType = normalizeGameType(
+    bootstrapResponse.playoffSeasons,
+    details.seasonId
+  );
+
   return {
+    type: gameType,
     gameDate: details.GameDateISO8601,
     gameState: "Scheduled",
     homeTeam: normalizeTeam(homeTeam),
@@ -108,16 +119,19 @@ const normalizeClockTime = (status: string): string => {
   return status.substring(13, 18).trim();
 };
 
-const normalizeLiveGame = ({
-  details,
-  homeTeam,
-  periods,
-  visitingTeam,
-}: GameSummaryResponse): LiveGame => {
+const normalizeLiveGame = (
+  { details, homeTeam, periods, visitingTeam }: GameSummaryResponse,
+  bootstrapResponse: BootstrapResponse
+): LiveGame => {
   const period = parseInt(periods[periods.length - 1].info.id);
   const clockTime = normalizeClockTime(details.status);
+  const gameType = normalizeGameType(
+    bootstrapResponse.playoffSeasons,
+    details.seasonId
+  );
 
   return {
+    type: gameType,
     gameDate: details.GameDateISO8601,
     gameState: "Live",
     gameClock: {
@@ -280,15 +294,19 @@ const normalizeScoringDetails = ({
 };
 
 type NormalizeGameDetails = (
-  apiGameSummary: GameSummaryResponse
+  apiGameSummary: GameSummaryResponse,
+  bootstrapResponse: BootstrapResponse
 ) => GameDetails;
-export const normalizeGameDetails: NormalizeGameDetails = (apiGameSummary) => {
+export const normalizeGameDetails: NormalizeGameDetails = (
+  apiGameSummary,
+  bootstrapResponse
+) => {
   if (
     apiGameSummary.details.final === "1" ||
     apiGameSummary.details.status === "Unofficial Final"
   ) {
     return {
-      game: normalizeFinalGame(apiGameSummary),
+      game: normalizeFinalGame(apiGameSummary, bootstrapResponse),
       gameStats: normalizeGameStats(apiGameSummary),
     };
   }
@@ -298,13 +316,13 @@ export const normalizeGameDetails: NormalizeGameDetails = (apiGameSummary) => {
     apiGameSummary.details.final === "0"
   ) {
     return {
-      game: normalizeScheduledGame(apiGameSummary),
+      game: normalizeScheduledGame(apiGameSummary, bootstrapResponse),
       gameStats: normalizeGameStats(apiGameSummary),
     };
   }
 
   return {
-    game: normalizeLiveGame(apiGameSummary),
+    game: normalizeLiveGame(apiGameSummary, bootstrapResponse),
     gameStats: normalizeGameStats(apiGameSummary),
   };
 };

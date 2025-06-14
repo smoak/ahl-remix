@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async () => {
   const scheduledGames = await getGamesByDate(today);
   const bootstrap = await getBootstrap();
 
-  const normalizedGames = normalizeGames(scheduledGames);
+  const normalizedGames = normalizeGames(scheduledGames, bootstrap);
   const normalizedBootstrap = normalizeBootstrap(bootstrap);
 
   return json<WithBootstrap<Game[]>>({
