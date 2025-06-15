@@ -17,7 +17,7 @@
     "lint:style": "prettier 'app/**/*.(ts|tsx)' --check",
     "lint:style:fix": "prettier 'app/**/*.(ts|tsx)' --write",
     "test": "TZ=UTC vitest run --coverage",
-    "test:ci": "TZ=UTC jest --runInBand",
+    "test:ci": "TZ=UTC vitest run",
     "typecheck": "tsc -b"
   },
   "dependencies": {
